@@ -31,6 +31,39 @@ await db.SaveChangesAsync();
 Console.WriteLine("Delete the blog");
 db.Remove(blog);
 await db.SaveChangesAsync();
+printincompleteTasksAndTodos();
+
+// using (BloggingContext context = new())
+// {
+//     var tasks = context.Tasks.Include(task => task.Todos);
+//     foreach (var task in tasks)
+//     {
+//         Console.WriteLine($"Task: {task.Name}");
+//         foreach (var todo in task.Todos)
+//         {
+//             Console.WriteLine($"- {todo.Name}");
+//         }
+//     }
+// }
+
+static void printincompleteTasksAndTodos()
+{
+    var context = new BloggingContext();
+    var tasks = context.Tasks.Include(task => task.Todos);
+    foreach (var task in tasks)
+    {
+        var incompleteTodos = task.Todos.Where(todo => !todo.IsComplete).ToList();
+        if (incompleteTodos.Any())
+        {
+            Console.WriteLine($"Task: {task.Name}");
+            foreach (var todo in incompleteTodos)
+            {
+                Console.WriteLine($"- {todo.Name}");
+            }
+        }
+    }
+}
+
 // SeedTasks();
 // static void SeedTasks()
 // {
@@ -55,16 +88,4 @@ await db.SaveChangesAsync();
 //     db.Tasks.Add(task);
 //     db.SaveChanges();
 // }
-using (BloggingContext context = new())
-{
-    var tasks = context.Tasks.Include(task => task.Todos);
-    foreach (var task in tasks)
-    {
-        Console.WriteLine($"Task: {task.Name}");
-        foreach (var todo in task.Todos)
-        {
-            Console.WriteLine($"- {todo.Name}");
-        }
-    }
-}
 
