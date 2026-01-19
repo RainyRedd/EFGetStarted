@@ -30,6 +30,44 @@ namespace EFGetStarted.Migrations
                     b.ToTable("Blogs");
                 });
 
+            modelBuilder.Entity("EFGetStarted.Task", b =>
+                {
+                    b.Property<int>("TaskId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("TaskId");
+
+                    b.ToTable("Tasks");
+                });
+
+            modelBuilder.Entity("EFGetStarted.Todo", b =>
+                {
+                    b.Property<int>("TodoId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsComplete")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("TaskId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("TodoId");
+
+                    b.HasIndex("TaskId");
+
+                    b.ToTable("Todos");
+                });
+
             modelBuilder.Entity("Post", b =>
                 {
                     b.Property<int>("PostId")
@@ -54,6 +92,13 @@ namespace EFGetStarted.Migrations
                     b.ToTable("Posts");
                 });
 
+            modelBuilder.Entity("EFGetStarted.Todo", b =>
+                {
+                    b.HasOne("EFGetStarted.Task", null)
+                        .WithMany("Todos")
+                        .HasForeignKey("TaskId");
+                });
+
             modelBuilder.Entity("Post", b =>
                 {
                     b.HasOne("Blog", "Blog")
@@ -68,6 +113,11 @@ namespace EFGetStarted.Migrations
             modelBuilder.Entity("Blog", b =>
                 {
                     b.Navigation("Posts");
+                });
+
+            modelBuilder.Entity("EFGetStarted.Task", b =>
+                {
+                    b.Navigation("Todos");
                 });
 #pragma warning restore 612, 618
         }

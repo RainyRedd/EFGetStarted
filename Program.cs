@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
+using EFGetStarted;
 using Microsoft.EntityFrameworkCore;
+using Task = EFGetStarted.Task;
 
 using var db = new BloggingContext();
 
@@ -29,3 +31,40 @@ await db.SaveChangesAsync();
 Console.WriteLine("Delete the blog");
 db.Remove(blog);
 await db.SaveChangesAsync();
+// SeedTasks();
+// static void SeedTasks()
+// {
+//     using var db = new BloggingContext();
+//     Task task = new()
+//     { 
+//         Name = "Produce softwere", Todos = [
+//          new Todo(){Name = "Write code",},
+//          new Todo(){Name = "Complie source"},
+//          new Todo(){Name = "test Program"}
+//         ]
+//     };
+//     db.Tasks.Add(task);
+//     task = new()
+//     {
+//         Name = "Brew coffee", Todos = [
+//         new Todo(){Name = "Pour water"},
+//         new Todo(){Name = "Pour coffee"},
+//         new Todo(){Name = "Turn on"}
+//         ]
+//     };
+//     db.Tasks.Add(task);
+//     db.SaveChanges();
+// }
+using (BloggingContext context = new())
+{
+    var tasks = context.Tasks.Include(task => task.Todos);
+    foreach (var task in tasks)
+    {
+        Console.WriteLine($"Task: {task.Name}");
+        foreach (var todo in task.Todos)
+        {
+            Console.WriteLine($"- {todo.Name}");
+        }
+    }
+}
+
